@@ -14,9 +14,30 @@ Anything else that's relevant:
 import json
 import requests
 
-response = requests.get('https://api.si.edu/openaccess/api/v1.0/search?api_key=egqk7unCsFkJqCiurbvF1x4gNZZyjKJwCIBVt5qw&q=history')
+print("*********\n\nSmithsonian Institution Records Search\n\n*********\n")
+
+# Search input to filter the request
+search = input("Enter a search category here: ")
+
+# Building url and submitting to server 
+response = requests.get(f'https://api.si.edu/openaccess/api/v1.0/search?api_key=egqk7unCsFkJqCiurbvF1x4gNZZyjKJwCIBVt5qw&q={search}&rows=10')
+
+# Storing response
 json_string = response.content
-    
+
+# Parsing json 
 parsed_json = json.loads(json_string)
 
-print(parsed_json)
+# Grabbing the rows array from the request
+response = parsed_json['response']['rows']
+
+#print top 10 items from search 
+try:
+    print("\nTop 10 Results:\n")
+    for item in response:
+        print(f'Title: {item["title"]}\nUnitcode: {item["unitCode"]}\nID: {item["id"]}\nDatasource: {item["content"]["freetext"]["dataSource"][0]["content"]}\n')
+except:
+    pass 
+
+
+
